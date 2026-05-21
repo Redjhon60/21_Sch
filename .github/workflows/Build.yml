@@ -1,0 +1,36 @@
+name: Le Schema SGS
+version: "1.0.0"
+
+app:
+  title: "Le Schéma SGS"
+  icon: "assets/school_logo.ico"
+
+paths:
+  base_dir: "."
+  required_directories:
+    - database
+    - receipts
+    - backups
+    - documents
+    - assets
+
+database:
+  init_on_startup: true
+
+ui:
+  login_window: "ui.login_window.LoginWindow"
+  main_window: "ui.main_window.MainWindow"
+
+qt:
+  enable_high_dpi_scaling: true
+
+python:
+  entrypoint: "main.py"
+
+imports:
+  - sys
+  - os
+  - PySide6.QtWidgets.QApplication
+  - PySide6.QtCore.Qt
+  - PySide6.QtGui.QIcon
+  - models.database.init_db
