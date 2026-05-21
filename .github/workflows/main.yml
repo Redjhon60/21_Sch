@@ -1,0 +1,94 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Verify imports
+        run: |
+          python -c "import PySide6, sqlalchemy, reportlab, PIL, qrcode, openpyxl, matplotlib, PyInstaller; print('All OK')"
+
+      - name: Build EXE
+        run: python -m PyInstaller SchoolManager.spec --noconfirm --clean
+
+      - name: Set up dist folder
+        shell: cmd
+        run: |
+          if not exist dist\assets    mkdir dist\assets
+          if not exist dist\documents mkdir dist\documents
+          if not exist dist\receipts  mkdir dist\receipts
+          if not exist dist\backups   mkdir dist\backups
+          if not exist dist\reports   mkdir dist\reports
+          copy /Y assets\school_logo.ico dist\assets\
+          copy /Y assets\school_logo.png dist\assets\
+          if exist assets\school_logo.jpg copy /Y assets\school_logo.jpg dist\assets\
+
+      - name: Initialize database
+        run: |
+          python -c "
+          import sys, os, sqlalchemy
+          sys.path.insert(0, '.')
+          import models.database as db
+          db.DB_PATH = os.path.abspath('dist/school.db')
+          db.engine  = sqlalchemy.create_engine('sqlite:///' + db.DB_PATH, echo=False)
+          db.Session = sqlalchemy.orm.sessionmaker(bind=db.engine)
+          db.Base.metadata.create_all(db.engine)
+          db.init_db()
+          print('school.db ready')
+          "
+
+      - name: Zip dist
+        run: Compress-Archive -Path dist\* -DestinationPath LeSchema-Windows.zip
+        shell: powershell
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeSchema-SchoolManager-Windows
+          path: dist\
+          retention-days: 30
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: "Le Schéma ERP v2.0 — Build ${{ github.run_number }}"
+          body: |
+            ## 🎓 Le Schéma — School Management ERP v2.0
+
+            ### ⬇️ Download
+            Download **LeSchema-Windows.zip**, extract, double-click `SchoolManager.exe`
+
+            ### 🔑 Login: `admin` / `admin123`
+
+            ### ✨ What's new in v2
+            - Premium dark ERP UI (blue/purple palette)
+            - Real matplotlib charts on dashboard
+            - Glassmorphism login with password toggle
+            - Animated stat cards with glow effects
+            - Full spacing overhaul — no overlapping text
+            - Professional table design with action buttons
+          files: LeSchema-Windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
