@@ -1,0 +1,43 @@
+name: Run PySide6 App
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install System Dependencies (Complete Stack for Qt6)
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb \
+          libegl1-mesa libgl1-mesa-glx libgles2-mesa libglx-mesa0 \
+          libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+          libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 \
+          libxcb-xfixes0 libxcb-shape0 libxcb-cursor0 libxi6 libxrender1 \
+          libdbus-1-3 libfontconfig1 libfreetype6
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install PySide6
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run App using XVFB
+      env:
+        QT_QPA_PLATFORM: xcb
+        QT_DEBUG_PLUGINS: 1  # Ghad y-werrik l-mouchkil detaille ila t-crashea
+      run: |
+        xvfb-run -a python main.py
