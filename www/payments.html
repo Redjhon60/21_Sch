@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Paiements | Etablissement Le Schema</title>
+  <link rel="stylesheet" href="payments.css">
+<link rel="stylesheet" href="common-theme.css"><link rel="stylesheet" href="app-shell.css"><link rel="stylesheet" href="payments-updates.css"><link rel="stylesheet" href="mobile-responsive.css?v=5"></head>
+<body>
+<header class="topbar"><a href="dashboard.html" class="back-link">← Tableau de bord</a><div class="brand">Etablissement Le Schema</div></header>
+<main class="container">
+  <section class="page-heading"><div><p class="eyebrow">GESTION FINANCIERE</p><h1>Gestion des paiements</h1><p class="subtitle">Une ligne par eleve avec suivi des mois payes et non payes.</p></div></section>
+  <section class="stats"><article class="stat-card"><span>Inscription non payee</span><strong id="totalDue">0 MAD</strong></article><article class="stat-card"><span>Mensualites non payees a ce jour</span><strong id="totalPaid">0 MAD</strong></article><span id="totalBalance" hidden></span><span id="studentCount" hidden></span></section>
+  <section class="panel">
+    <div class="toolbar"><input id="searchInput" type="search" placeholder="Rechercher un eleve..."><select id="yearFilter"><option value="">Toutes les annees</option></select><button id="addPaymentTop" class="primary-btn" type="button">Ajouter un paiement</button><button id="refreshBtn" type="button" class="secondary-btn">Actualiser</button></div>
+    <div id="message" class="message" role="status"></div>
+    <div class="table-wrapper"><table><thead><tr><th>Eleve</th><th>Classe</th><th>Annee</th><th>Inscription</th><th>Mensualite</th><th>Transport</th><th>Total mensuel</th><th>Mois suivant a payer</th><th>Action</th></tr></thead><tbody id="studentPaymentsTable"><tr><td colspan="8" class="empty-state">Chargement...</td></tr></tbody></table></div>
+  </section>
+</main>
+
+<dialog id="detailsDialog" class="large-dialog">
+  <div class="dialog-heading"><div><p class="dialog-eyebrow">DOSSIER DE PAIEMENT</p><h2 id="detailsTitle">Paiements de l'eleve</h2></div><button id="closeDetailsBtn" type="button" class="close-btn">×</button></div>
+  <input id="selectedStudentId" type="hidden">
+  <label class="picker-search">Rechercher un eleve<input id="pickerSearch" placeholder="Nom ou matricule"></label><div id="pickerResults"></div><p id="pickerMessage" role="status"></p><div id="detailsSummary" class="details-summary"></div><div class="details-actions"><button id="payFullYearBtn" type="button" class="primary-btn">Payer tout le reste de l'annee</button></div>
+  <div class="table-wrapper"><div class="payment-modes"><button type="button" data-payment-mode="monthly">Mois</button><button type="button" data-payment-mode="registration">Inscription</button><button type="button" data-payment-mode="both">Mois + inscription</button></div><div id="monthCards"></div><div class="checkout-bar"><span>Total selectionne <strong id="cartTotal">0 MAD</strong></span><button id="saveSelection" class="primary-btn" type="button">Enregistrer le paiement</button></div><table hidden><tbody id="invoiceDetailsTable"></tbody></table></div>
+</dialog>
+
+<dialog id="paymentDialog">
+  <form id="paymentForm">
+    <div class="dialog-heading"><h2>Enregistrer un reglement</h2><button id="closePaymentBtn" type="button" class="close-btn">×</button></div>
+    <input id="invoiceId" type="hidden">
+    <div id="invoiceSummary" class="invoice-summary"></div>
+    <div class="form-grid"><label>Montant *<input id="amountPaid" type="number" min="0.01" step="0.01" required></label><label>Date *<input id="paymentDate" type="date" required></label><label>Methode *<select id="paymentMethod" required><option value="cash">Especes</option><option value="bank_transfer">Virement</option><option value="card">Carte</option><option value="cheque">Cheque</option><option value="other">Autre</option></select></label><label>Reference<input id="paymentReference" maxlength="100"></label><label class="full-width">Note<textarea id="paymentNotes" rows="2" maxlength="500"></textarea></label></div>
+    <p id="paymentFormMessage" class="message" role="alert"></p>
+    <div class="form-actions"><button id="cancelPaymentBtn" type="button" class="secondary-btn">Annuler</button><button class="primary-btn" type="submit">Enregistrer et imprimer le recu</button></div>
+  </form>
+</dialog>
+
+<section id="receiptPrintArea" class="receipt-print-area" aria-hidden="true"></section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="secure-rpc.js"></script><script src="payments.js"></script>
+<script src="app-shell.js"></script></body>
+</html>

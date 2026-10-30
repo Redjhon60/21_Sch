@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Classes | Etablissement Le Schema</title>
+  <link rel="stylesheet" href="classes.css">
+<link rel="stylesheet" href="common-theme.css"><link rel="stylesheet" href="app-shell.css"><link rel="stylesheet" href="mobile-responsive.css?v=5"></head>
+<body>
+<header class="topbar"><a href="dashboard.html" class="back-link">← Tableau de bord</a><div class="brand">Etablissement Le Schema</div></header>
+<main class="container">
+  <section class="page-heading"><div><p class="eyebrow">GESTION SCOLAIRE</p><h1>Classes et niveaux</h1><p class="subtitle">Consultez et gerez les classes.</p></div><button id="addClassBtn" class="primary-btn" type="button">+ Ajouter une classe</button></section>
+  <section class="stats"><article class="stat-card"><span>Total des classes</span><strong id="totalClasses">0</strong></article></section>
+  <section class="panel">
+    <div class="toolbar"><input id="searchInput" type="search" placeholder="Rechercher une classe..."><button id="refreshBtn" class="secondary-btn" type="button">Actualiser</button></div>
+    <div id="message" class="message" role="status"></div>
+    <div class="table-wrapper"><table><thead><tr><th>Nom de la classe</th><th>Actions</th></tr></thead><tbody id="classesTable"><tr><td colspan="2" class="empty-state">Chargement...</td></tr></tbody></table></div>
+  </section>
+</main>
+<dialog id="classDialog">
+  <form id="classForm">
+    <div class="dialog-heading"><h2 id="formTitle">Ajouter une classe</h2><button id="closeDialogBtn" type="button" class="close-btn">×</button></div>
+    <input id="classId" type="hidden">
+    <label for="className"><span>Nom de la classe *</span><input id="className" maxlength="100" required></label>
+    <p id="formMessage" class="message" role="alert"></p>
+    <div class="form-actions"><button id="cancelBtn" type="button" class="secondary-btn">Annuler</button><button id="saveBtn" type="submit" class="primary-btn">Enregistrer</button></div>
+  </form>
+</dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="classes.js"></script>
+<script src="app-shell.js"></script></body>
+</html>

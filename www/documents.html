@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Certificats et documents | Le Schema</title>
+    <link rel="stylesheet" href="documents.css">
+<link rel="stylesheet" href="common-theme.css"><link rel="stylesheet" href="app-shell.css"><link rel="stylesheet" href="mobile-responsive.css?v=5"></head>
+<body>
+<header class="topbar">
+    <a href="dashboard.html" class="back-link">← Tableau de bord</a>
+    <div class="brand">Etablissement Le Schema</div>
+</header>
+
+<main class="container">
+    <section class="page-heading">
+        <div>
+            <p class="eyebrow">ADMINISTRATION SCOLAIRE</p>
+            <h1>Certificats et documents</h1>
+            <p class="subtitle">Choisissez les informations. Le contenu du document est genere automatiquement.</p>
+        </div>
+        <button id="newDocumentBtn" type="button" class="primary-btn">+ Generer un document</button>
+    </section>
+
+    <section class="stats">
+        <article class="stat-card"><span>Documents generes</span><strong id="documentCount">0</strong></article>
+        <article class="stat-card"><span>Ce mois</span><strong id="monthCount">0</strong></article>
+        <article class="stat-card"><span>Eleves concernes</span><strong id="studentCount">0</strong></article>
+    </section>
+
+    <section class="panel">
+        <div class="toolbar">
+            <input id="searchInput" type="search" placeholder="Eleve, numero document...">
+            <select id="typeFilter"><option value="">Tous les documents</option></select>
+            <select id="languageFilter">
+                <option value="">Toutes les langues</option>
+                <option value="fr">Francais</option>
+                <option value="ar">Arabe</option>
+                <option value="bilingual">Bilingue</option>
+            </select>
+            <button id="refreshBtn" type="button" class="secondary-btn">Actualiser</button>
+        </div>
+        <div id="message" class="message" role="status"></div>
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Numero</th><th>Date</th><th>Eleve</th><th>Classe</th><th>Document</th><th>Langue</th><th>Action</th></tr></thead>
+                <tbody id="documentsTable"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<dialog id="documentDialog" class="document-dialog">
+    <form id="documentForm">
+        <div class="dialog-heading">
+            <div><p class="dialog-eyebrow">GENERATION AUTOMATIQUE</p><h2>Nouveau document</h2></div>
+            <button id="closeDialogBtn" type="button" class="close-btn">×</button>
+        </div>
+
+        <div class="form-grid">
+            <label>Eleve *
+                <select id="studentId" required><option value="">Choisir un eleve</option></select>
+            </label>
+
+            <label>Type de document *
+                <select id="documentType" required></select>
+            </label>
+
+            <label>Langue *
+                <select id="language" required>
+                    <option value="fr">Francais</option>
+                    <option value="ar">Arabe</option>
+                    <option value="bilingual">Francais + Arabe</option>
+                </select>
+            </label>
+
+            <label>Annee scolaire *
+                <select id="academicYear" required><option value="">Choisir</option></select>
+            </label>
+
+            <label>Date d'emission *
+                <input id="issueDate" type="date" required>
+            </label>
+
+            <label>Destinataire / usage *
+                <select id="recipientType" required>
+                    <option value="concerned">A qui de droit</option>
+                    <option value="administration">Administration publique</option>
+                    <option value="transfer_school">Etablissement de transfert</option>
+                    <option value="consulate">Consulat / ambassade</option>
+                    <option value="bank">Banque</option>
+                    <option value="insurance">Assurance</option>
+                    <option value="scholarship">Dossier de bourse</option>
+                    <option value="other">Autre organisme</option>
+                </select>
+            </label>
+
+            <label>Nombre de copies
+                <select id="copyCount">
+                    <option value="1">1 copie</option>
+                    <option value="2">2 copies</option>
+                    <option value="3">3 copies</option>
+                </select>
+            </label>
+
+            <label>Photo eleve
+                <select id="includePhoto">
+                    <option value="false">Sans photo</option>
+                    <option value="true">Avec photo</option>
+                </select>
+            </label>
+        </div>
+
+        <section class="template-preview">
+            <div><span>Modele selectionne</span><strong id="templateTitle">Certificat de scolarite</strong></div>
+            <p id="templateDescription">Atteste que l'eleve est regulierement inscrit dans l'etablissement.</p>
+        </section>
+
+        <p id="formMessage" class="message" role="alert"></p>
+        <div class="form-actions">
+            <button id="cancelBtn" type="button" class="secondary-btn">Annuler</button>
+            <button id="previewBtn" type="button" class="secondary-btn">Apercu</button>
+            <button class="primary-btn" type="submit">Enregistrer et imprimer</button>
+        </div>
+    </form>
+</dialog>
+
+<section id="printArea" class="print-area" aria-hidden="true"></section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="documents.js"></script>
+<script src="employee-documents.js"></script><script src="app-shell.js"></script></body>
+</html>

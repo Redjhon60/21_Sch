@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Connexion à la plateforme de gestion de l'Établissement Le Schéma">
+  <meta name="theme-color" content="#0b1425">
+  <title>Connexion | Établissement Le Schéma</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="auth-page">
+    <section class="welcome-panel" aria-label="Présentation de la plateforme">
+      <div class="welcome-inner">
+        <a class="school-brand" href="index.html" aria-label="Accueil Établissement Le Schéma">
+          <img src="logo.jpeg" alt="Logo Établissement Le Schéma">
+          <span><strong>Établissement Le Schéma</strong><small>Plateforme de gestion scolaire</small></span>
+        </a>
+        <div class="welcome-copy">
+          <p class="eyebrow">ESPACE SCOLAIRE SÉCURISÉ</p>
+          <h1>Une gestion simple, claire et centralisée.</h1>
+          <p>Accédez aux élèves, employés, paiements, documents, emplois du temps et transports depuis un seul espace.</p>
+          <div class="feature-list" aria-label="Fonctionnalités principales">
+            <span>Gestion administrative</span><span>Suivi financier</span><span>Organisation pédagogique</span><span>Transport scolaire</span>
+          </div>
+        </div>
+        <p class="welcome-footer">Innover · Créer · Exceller</p>
+      </div>
+    </section>
+
+    <section class="auth-panel">
+      <div class="mobile-brand">
+        <img src="logo.jpeg" alt="Logo Établissement Le Schéma">
+        <div><strong>Le Schéma</strong><small>Gestion scolaire</small></div>
+      </div>
+
+      <div class="auth-card">
+        <div class="tabs" role="tablist" aria-label="Authentification">
+          <button type="button" class="tab active" data-tab="login" role="tab" aria-selected="true">Connexion</button>
+          <button type="button" class="tab" data-tab="register" role="tab" aria-selected="false">Créer un compte</button>
+        </div>
+
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+
+        <form id="login" class="auth-form" novalidate>
+          <div class="form-heading">
+            <p class="eyebrow">BIENVENUE</p>
+            <h2>Connectez-vous</h2>
+            <p>Utilisez votre adresse e-mail et votre mot de passe.</p>
+          </div>
+          <label for="loginEmail">Adresse e-mail</label>
+          <input type="email" id="loginEmail" name="email" placeholder="nom@exemple.com" autocomplete="email" inputmode="email" required>
+          <label for="loginPassword">Mot de passe</label>
+          <div class="password-field">
+            <input type="password" id="loginPassword" name="password" placeholder="Votre mot de passe" autocomplete="current-password" required>
+            <button type="button" class="password-toggle" data-password="loginPassword" aria-label="Afficher le mot de passe">Afficher</button>
+          </div>
+          <div class="form-options">
+            <label class="remember"><input type="checkbox" id="rememberMe"> <span>Rester connecté</span></label>
+            <a href="#" id="forgot">Mot de passe oublié ?</a>
+          </div>
+          <button type="submit" class="submit-btn">Se connecter <span aria-hidden="true">→</span></button>
+        </form>
+
+        <form id="register" class="auth-form hidden" novalidate>
+          <div class="form-heading">
+            <p class="eyebrow">NOUVEAU COMPTE</p>
+            <h2>Créer une demande d'accès</h2>
+            <p>Le compte sera accessible après validation par l'administration.</p>
+          </div>
+          <div class="register-grid">
+            <div class="field full"><label for="fullName">Nom complet</label><input type="text" id="fullName" name="fullName" placeholder="Nom et prénom" autocomplete="name" minlength="2" required></div>
+            <div class="field"><label for="registerEmail">Adresse e-mail</label><input type="email" id="registerEmail" name="email" placeholder="nom@exemple.com" autocomplete="email" required></div>
+            <div class="field"><label for="phone">Téléphone</label><input type="tel" id="phone" name="phone" placeholder="06 00 00 00 00" autocomplete="tel" maxlength="25" required></div>
+            <div class="field full request-note"><strong>Demande d'accès</strong><span>Après l'inscription, un administrateur Access total choisira votre rôle et validera votre accès.</span></div>
+            <div class="field"><label for="registerPassword">Mot de passe</label><input type="password" id="registerPassword" name="password" placeholder="8 caractères minimum" autocomplete="new-password" minlength="8" required></div>
+            <div class="field"><label for="confirmPassword">Confirmation</label><input type="password" id="confirmPassword" name="confirmPassword" placeholder="Répéter le mot de passe" autocomplete="new-password" minlength="8" required></div>
+          </div>
+          <label class="terms" for="terms"><input type="checkbox" id="terms" name="terms" required><span>J'accepte les conditions d'utilisation et la politique de confidentialité.</span></label>
+          <button type="submit" class="submit-btn">Créer mon compte <span aria-hidden="true">→</span></button>
+        </form>
+
+        <div class="security-note"><span aria-hidden="true">●</span> Connexion sécurisée et accès soumis à validation</div>
+      </div>
+      <footer>© <span id="year"></span> Établissement Le Schéma</footer>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

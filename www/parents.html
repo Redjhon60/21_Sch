@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parents | Établissement Le Schéma</title>
+    <link rel="stylesheet" href="parents.css">
+<link rel="stylesheet" href="common-theme.css"><link rel="stylesheet" href="app-shell.css"><link rel="stylesheet" href="mobile-responsive.css?v=5"></head>
+
+<body>
+    <header class="topbar">
+        <a href="dashboard.html" class="back-link" id="backLink">
+            ← Tableau de bord
+        </a>
+
+        <div class="brand">Établissement Le Schéma</div>
+
+        <button type="button" id="languageBtn" class="language-btn">
+            العربية
+        </button>
+    </header>
+
+    <main class="container">
+        <section class="page-heading">
+            <div>
+                <p class="eyebrow" id="eyebrow">GESTION SCOLAIRE</p>
+                <h1 id="pageTitle">Gestion des parents</h1>
+                <p class="subtitle" id="pageSubtitle">
+                    Consultez et gérez les informations des parents
+                    et leurs élèves associés.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="addParentBtn"
+                class="primary-btn"
+                onclick="
+                    if (typeof openAddForm !== 'function') {
+                        document.getElementById('parentForm').reset();
+                        document.getElementById('parentId').value = '';
+                        document.getElementById('formTitle').textContent =
+                            'Ajouter un parent';
+                        document.getElementById('parentDialog').showModal();
+                        document.getElementById('formMessage').textContent =
+                            'Le formulaire est ouvert, mais parents.js ne fonctionne pas. Le chargement des élèves et la sauvegarde sont indisponibles.';
+                    }
+                "
+            >
+                + Ajouter un parent
+            </button>
+        </section>
+
+        <section class="stats">
+            <article class="stat-card">
+                <span id="totalParentsLabel">Total des parents</span>
+                <strong id="totalParents">—</strong>
+            </article>
+
+            <article class="stat-card">
+                <span id="linkedStudentsLabel">Élèves associés</span>
+                <strong id="totalLinkedStudents">—</strong>
+            </article>
+        </section>
+
+        <section class="panel">
+            <div class="toolbar">
+                <input
+                    type="search"
+                    id="searchInput"
+                    aria-label="Rechercher un parent"
+                    placeholder="Rechercher par nom, téléphone, CIN ou email..."
+                >
+
+                <button type="button" id="refreshBtn" class="secondary-btn">
+                    Actualiser
+                </button>
+            </div>
+
+            <div
+                id="message"
+                class="message"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="parentNameHead">Nom complet</th>
+                            <th id="cinHead">CIN</th>
+                            <th id="phoneHead">Téléphone</th>
+                            <th id="emailHead">Email</th>
+                            <th id="studentsHead">Élève(s)</th>
+                            <th id="relationshipHead">Lien</th>
+                            <th id="actionsHead">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="parentsTable">
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                Chargement des parents...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="parentDialog" aria-labelledby="formTitle">
+        <form
+            id="parentForm"
+            onsubmit="
+                if (typeof saveParent !== 'function') {
+                    event.preventDefault();
+                    document.getElementById('formMessage').textContent =
+                        'Sauvegarde indisponible : parents.js ne fonctionne pas.';
+                }
+            "
+        >
+            <div class="dialog-heading">
+                <div>
+                    <p class="dialog-eyebrow">DOSSIER PARENT</p>
+                    <h2 id="formTitle">Ajouter un parent</h2>
+                </div>
+
+                <button
+                    type="button"
+                    id="closeDialogBtn"
+                    class="close-btn"
+                    aria-label="Fermer"
+                    onclick="document.getElementById('parentDialog').close()"
+                >
+                    ×
+                </button>
+            </div>
+
+            <input type="hidden" id="parentId">
+
+            <div class="form-section-title">
+                Informations du parent
+            </div>
+
+            <div class="form-grid">
+                <label for="fullName">
+                    <span id="fullNameLabel">Nom complet *</span>
+                    <input
+                        id="fullName"
+                        name="full_name"
+                        type="text"
+                        maxlength="200"
+                        autocomplete="name"
+                        required
+                    >
+                </label>
+
+                <label for="cin">
+                    <span id="cinLabel">CIN</span>
+                    <input
+                        id="cin"
+                        name="cin"
+                        type="text"
+                        maxlength="30"
+                        autocomplete="off"
+                    >
+                </label>
+
+                <label for="phone">
+                    <span id="phoneLabel">Téléphone *</span>
+                    <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        maxlength="30"
+                        autocomplete="tel"
+                        required
+                    >
+                </label>
+
+                <label for="email">
+                    <span id="emailLabel">Email</span>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        maxlength="200"
+                        autocomplete="email"
+                    >
+                </label>
+
+                <label for="address" class="full-width">
+                    <span id="addressLabel">Adresse</span>
+                    <textarea
+                        id="address"
+                        name="address"
+                        rows="3"
+                        maxlength="500"
+                        autocomplete="street-address"
+                    ></textarea>
+                </label>
+            </div>
+
+            <div class="form-section-title student-section-title">
+                Élève associé
+            </div>
+
+            <div class="form-grid">
+                <label for="studentId">
+                    <span id="studentLabel">Élève</span>
+                    <select id="studentId" name="student_id">
+                        <option value="">Choisir un élève</option>
+                    </select>
+                </label>
+
+                <label for="relationship">
+                    <span id="relationshipLabel">Lien avec l'élève</span>
+                    <select id="relationship" name="relationship">
+                        <option value="">Choisir</option>
+                        <option value="Père">Père</option>
+                        <option value="Mère">Mère</option>
+                        <option value="Tuteur">Tuteur</option>
+                        <option value="Tutrice">Tutrice</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </label>
+            </div>
+
+            <p id="formMessage" class="message" role="alert"></p>
+
+            <div class="form-actions">
+                <button
+                    type="button"
+                    id="cancelBtn"
+                    class="secondary-btn"
+                    onclick="document.getElementById('parentDialog').close()"
+                >
+                    Annuler
+                </button>
+
+                <button type="submit" id="saveBtn" class="primary-btn">
+                    Enregistrer
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="parents.js"></script>
+<script src="app-shell.js"></script></body>
+</html>

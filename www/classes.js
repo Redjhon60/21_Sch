@@ -1,0 +1,21 @@
+(() => {
+  "use strict";
+  const URL="https://rsyslzkzddqrktkivttj.supabase.co";
+  const KEY="sb_publishable_kaQwfCNTwKhMR-vyrttg-g_weS7URLP";
+  const $=id=>document.getElementById(id);
+  const ids=["addClassBtn","refreshBtn","searchInput","classesTable","totalClasses","message","classDialog","classForm","classId","className","formTitle","formMessage","closeDialogBtn","cancelBtn","saveBtn"];
+  const missing=ids.filter(id=>!$(id));
+  if(missing.length||!window.supabase){console.error("Missing:",missing);if($("message"))$("message").textContent="Erreur HTML/JS: "+missing.join(", ");return;}
+  const db=window.supabase.createClient(URL,KEY);let items=[];let busy=false;
+  const msg=(v="",t="")=>{$("message").textContent=v;$("message").className="message"+(t?" "+t:"");};
+  const fmsg=(v="",t="")=>{$("formMessage").textContent=v;$("formMessage").className="message"+(t?" "+t:"");};
+  async function access(){const {data,error}=await db.auth.getUser();if(error||!data.user)throw new Error("Veuillez vous connecter.");const r=await db.from("profiles").select("role,status").eq("id",data.user.id).maybeSingle();if(r.error)throw r.error;const role=String(r.data?.role||"").trim().toLowerCase();const status=String(r.data?.status||"").trim().toLowerCase();if(!["access","access total"].includes(role)||status!=="approved")throw new Error("Acces refuse.");}
+  function setBusy(v){busy=v;["addClassBtn","refreshBtn","saveBtn","cancelBtn","closeDialogBtn"].forEach(id=>$(id).disabled=v);}
+  function render(){const q=$("searchInput").value.trim().toLowerCase();const list=items.filter(x=>x.name.toLowerCase().includes(q));$("classesTable").replaceChildren();$("totalClasses").textContent=items.length;if(!list.length){const r=$("classesTable").insertRow(),c=r.insertCell();c.colSpan=2;c.className="empty-state";c.textContent="Aucune classe trouvee.";return;}for(const item of list){const r=$("classesTable").insertRow();r.insertCell().textContent=item.name;const a=r.insertCell();const e=document.createElement("button");e.type="button";e.className="row-action";e.textContent="Modifier";e.onclick=()=>open(item);const d=document.createElement("button");d.type="button";d.className="row-action delete";d.textContent="Supprimer";d.onclick=()=>remove(item);a.append(e,d);}}
+  async function load(){if(busy)return;setBusy(true);msg("Chargement...");try{await access();const {data,error}=await db.from("classes").select("id,name,created_at").order("name");if(error)throw error;items=data||[];render();msg();}catch(e){msg("Erreur : "+e.message,"error");}finally{setBusy(false);}}
+  function open(item=null){$("classForm").reset();$("classId").value=item?.id||"";$("className").value=item?.name||"";$("formTitle").textContent=item?"Modifier la classe":"Ajouter une classe";fmsg();$("classDialog").showModal();$("className").focus();}
+  async function save(ev){ev.preventDefault();if(busy)return;const name=$("className").value.trim();if(!name){fmsg("Nom obligatoire.","error");return;}setBusy(true);try{await access();const id=$("classId").value;const q=id?db.from("classes").update({name}).eq("id",id):db.from("classes").insert({name});const {error}=await q;if(error)throw error;$("classDialog").close();await loadDirect();msg("Classe enregistree.","success");}catch(e){fmsg(e.code==="23505"?"Cette classe existe deja.":"Erreur : "+e.message,"error");}finally{setBusy(false);}}
+  async function loadDirect(){const {data,error}=await db.from("classes").select("id,name,created_at").order("name");if(error)throw error;items=data||[];render();}
+  async function remove(item){if(!confirm("Supprimer "+item.name+" ?"))return;setBusy(true);try{await access();const {error}=await db.from("classes").delete().eq("id",item.id);if(error)throw error;await loadDirect();msg("Classe supprimee.","success");}catch(e){msg("Erreur : "+e.message,"error");}finally{setBusy(false);}}
+  $("addClassBtn").addEventListener("click",()=>open());$("refreshBtn").addEventListener("click",load);$("searchInput").addEventListener("input",render);$("classForm").addEventListener("submit",save);$("closeDialogBtn").addEventListener("click",()=>$("classDialog").close());$("cancelBtn").addEventListener("click",()=>$("classDialog").close());load();
+})();

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Eleves | Etablissement Le Schema</title>
+  <link rel="stylesheet" href="students.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.6.0/maplibre-gl.css">
+<link rel="stylesheet" href="common-theme.css"><link rel="stylesheet" href="app-shell.css"><link rel="stylesheet" href="students-payroll-theme.css?v=2"><link rel="stylesheet" href="mobile-responsive.css?v=5"></head>
+<body>
+<header class="topbar"><a href="dashboard.html" class="back-link">← Tableau de bord</a><div class="brand">Etablissement Le Schema</div></header>
+<main class="container students-payroll">
+  <section class="page-heading"><div><p class="eyebrow">GESTION SCOLAIRE</p><h1>Gestion des eleves</h1><p class="subtitle">Cliquez sur Voir pour consulter la fiche complete.</p></div><button id="addStudentBtn" class="primary-btn" type="button">+ Ajouter un eleve</button></section>
+  <section class="stats"><article class="stat-card"><span class="stat-icon">♙</span><div><span>Total élèves</span><strong id="totalStudents">0</strong><small>Effectif enregistré</small></div></article><article class="stat-card"><span class="stat-icon">✓</span><div><span>Élèves actifs</span><strong id="activeStudents">0</strong><small>Dossiers actifs</small></div></article><article class="stat-card"><span class="stat-icon">◷</span><div><span>Finance en attente</span><strong id="pendingStudents">0</strong><small>Dossiers à compléter</small></div></article></section>
+  <div class="students-layout"><section class="panel students-activity"><div class="activity-head"><div><h2>Liste des élèves</h2><p>Sélectionnez un élève pour afficher son résumé.</p></div></div><div class="toolbar"><input id="searchInput" type="search" placeholder="Rechercher..."><button id="refreshBtn" type="button" class="secondary-btn">Actualiser</button></div><div id="message" class="message"></div><div class="table-wrapper"><table><thead><tr><th>Numero</th><th>Nom</th><th>Classe</th><th>Transport</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="studentsTable"><tr><td colspan="6" class="empty-state">Chargement...</td></tr></tbody></table></div></section><aside id="studentSideDetail" class="panel students-detail" aria-live="polite"></aside></div>
+</main>
+
+<dialog id="studentDetailsDialog" class="large-dialog">
+  <div class="dialog-heading"><div><p class="dialog-eyebrow">FICHE ELEVE</p><h2 id="detailsStudentName">Informations de l'eleve</h2></div><button id="closeDetailsBtn" type="button" class="close-btn">×</button></div>
+  <input id="detailsStudentId" type="hidden">
+  <div class="student-profile-head"><img id="detailsPhoto" alt="Photo eleve"><div id="studentDetailsContent" class="student-detail-grid"></div></div>
+  <div id="studentLocationBlock" hidden><div class="section-title">Localisation transport</div><div id="studentDetailsMap"></div></div>
+  <div class="form-actions"><button id="detailsFinanceBtn" type="button" class="secondary-btn">Finance</button><button id="detailsEditBtn" type="button" class="primary-btn">Modifier</button></div>
+</dialog>
+
+<dialog id="studentDialog">
+<form id="studentForm">
+  <div class="dialog-heading"><h2>Etape 1 - Dossier scolaire</h2><button id="closeStudentBtn" type="button" class="close-btn">×</button></div>
+  <input id="studentId" type="hidden">
+  <div class="form-grid">
+    <label>Numero<input id="studentNumber" placeholder="Genere automatiquement" readonly></label><label>Prenom *<input id="firstName" required></label><label>Nom *<input id="lastName" required></label><label>Classe<select id="className"><option value="">Choisir</option></select></label>
+    <label>Parent<input id="parentName"></label><label>Telephone<input id="parentPhone" type="tel"></label><label>Date naissance<input id="birthDate" type="date"></label><label>Genre<select id="gender"><option value="">Choisir</option><option value="Masculin">Masculin</option><option value="Feminin">Feminin</option></select></label>
+    <label>Date inscription<input id="enrollmentDate" type="date"></label><label>Photo eleve<div class="photo-actions"><button id="startCameraBtn" type="button" class="secondary-btn">Activer camera</button><button id="capturePhotoBtn" type="button" class="secondary-btn" disabled>Prendre photo</button></div></label><label>Transport<select id="usesTransport"><option value="false">Non</option><option value="true">Oui</option></select></label><label class="full-width">Adresse<textarea id="address"></textarea></label><div class="full-width camera-box"><video id="cameraVideo" autoplay playsinline hidden></video><canvas id="photoCanvas" hidden></canvas><img id="photoPreview" alt="Photo eleve" hidden></div>
+  </div>
+  <div id="transportBlock" hidden><div class="section-title">Localisation transport</div><label>Adresse transport<input id="transportAddress"></label><div id="transportMap"></div><input id="transportLatitude" type="hidden"><input id="transportLongitude" type="hidden"><p class="map-help">Cliquez sur la carte pour placer le domicile.</p></div>
+  <p id="studentFormMessage" class="message"></p><div class="form-actions"><button id="cancelStudentBtn" type="button" class="secondary-btn">Annuler</button><button class="primary-btn">Enregistrer</button></div>
+</form>
+</dialog>
+
+<dialog id="financeDialog">
+<form id="financeForm">
+  <div class="dialog-heading"><h2>Configuration financiere</h2><button id="closeFinanceBtn" type="button" class="close-btn">×</button></div>
+  <input id="financeStudentId" type="hidden">
+  <div class="form-grid"><label>Annee scolaire *<input id="academicYear" placeholder="2026-2027" required></label><label>Mois debut *<input id="startMonth" type="month" required></label><label>Inscription<input id="registrationFee" type="number" min="0" step="0.01" value="0"></label><label>Mensualite<input id="monthlyTuition" type="number" min="0" step="0.01" value="0"></label><label id="transportFeeField">Transport mensuel<input id="monthlyTransport" type="number" min="0" step="0.01" value="0"></label></div>
+  <div class="salary-preview"><span>Total mensuel</span><strong id="monthlyTotal">0 MAD</strong></div><p id="financeFormMessage" class="message"></p><div class="form-actions"><button id="cancelFinanceBtn" type="button" class="secondary-btn">Annuler</button><button class="primary-btn">Valider</button></div>
+</form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.6.0/maplibre-gl.js"></script>
+<script src="students.js"></script><script src="students-layout.js?v=2"></script>
+<script src="finance-alerts.js"></script><script src="app-shell.js"></script></body>
+</html>

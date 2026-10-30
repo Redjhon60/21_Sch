@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Professeurs | Etablissement Le Schema</title>
+  <link rel="stylesheet" href="teachers.css">
+<link rel="stylesheet" href="common-theme.css"><link rel="stylesheet" href="app-shell.css"><link rel="stylesheet" href="mobile-responsive.css?v=5"></head>
+<body>
+<header class="topbar"><a href="dashboard.html" class="back-link">← Tableau de bord</a><div class="brand">Etablissement Le Schema</div></header>
+<main class="container">
+  <section class="page-heading"><div><p class="eyebrow">GESTION SCOLAIRE</p><h1>Gestion des professeurs</h1><p class="subtitle">Gerez les professeurs, les classes et la remuneration.</p></div><button id="addTeacherBtn" type="button" class="primary-btn">+ Ajouter un professeur</button></section>
+  <section class="stats"><article class="stat-card"><span>Total des professeurs</span><strong id="totalTeachers">0</strong></article><article class="stat-card"><span>Matieres</span><strong id="totalSubjects">0</strong></article><article class="stat-card"><span>Avec remuneration</span><strong id="totalPaidTeachers">0</strong></article></section>
+  <section class="panel"><div class="toolbar"><input id="searchInput" type="search" placeholder="Rechercher par nom, matiere ou classe..."><button id="refreshBtn" type="button" class="secondary-btn">Actualiser</button></div><div id="message" class="message" role="status"></div><div class="table-wrapper"><table><thead><tr><th>Nom</th><th>Matiere</th><th>Classes</th><th>Telephone</th><th>Mode</th><th>Heures</th><th>Montant</th><th>Actions</th></tr></thead><tbody id="teachersTable"><tr><td colspan="8" class="empty-state">Chargement...</td></tr></tbody></table></div></section>
+</main>
+<dialog id="teacherDialog">
+<form id="teacherForm">
+  <div class="dialog-heading"><h2 id="teacherFormTitle">Ajouter un professeur</h2><button id="closeTeacherDialogBtn" type="button" class="close-btn">×</button></div>
+  <input id="teacherId" type="hidden">
+  <div class="form-grid"><label for="fullName"><span>Nom complet *</span><input id="fullName" required maxlength="200"></label><label for="subject"><span>Matiere *</span><select id="subject" required><option value="">Choisir</option><option>Arabe</option><option>Francais</option><option>Mathematiques</option><option>Activite scientifique</option><option>Histoire-Geographie</option><option>Education islamique</option><option>Physique-Chimie</option><option>Sciences de la vie et de la Terre - SVT</option><option>Anglais</option><option>Philosophie</option></select></label><label for="phone"><span>Telephone</span><input id="phone" type="tel"></label><label for="email"><span>Email</span><input id="email" type="email"></label><label for="hireDate"><span>Date d'entree</span><input id="hireDate" type="date"></label><label for="address" class="full-width"><span>Adresse</span><textarea id="address" rows="2"></textarea></label></div>
+  <div class="section-title">Classes affectees</div><div id="classesCheckboxes" class="checkbox-grid"><p class="empty-state">Chargement...</p></div>
+  <div class="section-title">Remuneration</div><div class="salary-grid"><label for="salaryMonth"><span>Mois *</span><input id="salaryMonth" type="month" required></label><label for="paymentMode"><span>Mode *</span><select id="paymentMode" required><option value="monthly">Mensuel</option><option value="hourly">Par heure</option></select></label><label for="salaryRate"><span id="salaryRateLabel">Salaire mensuel MAD *</span><input id="salaryRate" type="number" min="0" step="0.01" required></label><label id="plannedHoursField" for="plannedHours" hidden><span>Nombre d'heures *</span><input id="plannedHours" type="number" min="0" step="0.25"></label><div class="salary-preview full-width"><span>Montant calcule</span><strong id="automaticSalaryAmount">0,00 MAD</strong><small id="automaticSalaryDetails">Montant mensuel fixe.</small></div></div>
+  <p id="teacherFormMessage" class="message" role="alert"></p>
+  <div class="form-actions"><button id="cancelTeacherBtn" type="button" class="secondary-btn">Annuler</button><button id="saveTeacherBtn" type="submit" class="primary-btn">Enregistrer</button></div>
+</form>
+</dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="teachers.js"></script>
+<script src="app-shell.js"></script></body>
+</html>

@@ -1,0 +1,3 @@
+.stats{grid-template-columns:repeat(4,1fr)}#employeeDialog{width:min(900px,96%)}@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.stats{grid-template-columns:1fr}}
+
+[hidden]{display:none!important}

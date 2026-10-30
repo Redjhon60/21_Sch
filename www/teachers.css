@@ -1,0 +1,2 @@
+@import url("./classes.css");
+.stats{grid-template-columns:repeat(3,minmax(0,1fr))}#teacherDialog{width:min(900px,96%)}.checkbox-grid{margin-bottom:4px}.salary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.salary-preview{display:flex;flex-direction:column;justify-content:center;min-height:80px}.salary-preview small{color:var(--muted)}@media(max-width:700px){.salary-grid{grid-template-columns:1fr}}
